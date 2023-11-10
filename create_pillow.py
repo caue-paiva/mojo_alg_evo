@@ -25,5 +25,5 @@ def make_pillow(fps:int, fig):
          l.set_data(currentXList, currentYList)
          writer.grab_frame()
 
-fig = plt.figure()
-make_pillow(15,fig)
+#fig = plt.figure()
+#make_pillow(15,fig)

@@ -1,10 +1,11 @@
 from utils.vector import DynamicVector
 from memory.unsafe import Pointer
 from random import seed
-from random import random_float64
+from random import random_float64 , random_si64
 from math import sqrt, pow , sin, cos
 
 let TAM_POP: Int = 10
+let se_fuder_mojo: Int64 =10
 let DELTA: Float64 = 1.0
 let VAR_MUT_ARR_SIZE: Int = 7
 let OG_MUT: Float64 = 5.0
@@ -35,7 +36,6 @@ fn set_mut_changes_vector():
 
 fn natu_selection(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64])-> DynamicVector[Float64]:
     var max_fit: Float64 = fit_vector[0]
-    var most_fit_idv: Int = 0
     var new_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range(1, TAM_POP):
         if fit_vector[i] > max_fit:
@@ -44,8 +44,8 @@ fn natu_selection(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[
     for i in range (TAM_POP):
         if i == max_fit_index:
             continue  
-        new_pop.push_back(((pop_vector[i] + (pop_vector[most_fit_idv]))/2) + random_mutation())
-       
+        new_pop.push_back(((pop_vector[i] + (pop_vector[max_fit_index]))/2) + random_mutation())
+        # transa o melhor com todos
         if new_pop[i] > MAXX_VAL: #caso supere o valor maximo, o indv recebe o valor max
             new_pop[i] = MAXX_VAL
         elif new_pop[i] < 0: #caso fique negativo, faz ele ficar positivo
@@ -106,12 +106,22 @@ fn tournament(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Floa
 
     var tempFit: Float64 = fit_vector[0]
     var temp_best_index: Int = 0
-
+    var temp_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
+    var final_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (1,TAM_POP):
         if(fit_vector[i] > max_fit):
             max_fit = fit_vector[i]
             max_fit_index = i
+    
+    for i in range (TAM_POP):
+        temp_pop.push_back(pop_vector[i])
 
+    for i in range (TAM_POP):
+        if i == max_fit_index:
+            pass
+        
+        a = random_si64(min = se_fuder_mojo,max = se_fuder_mojo)
+        
 
     pass
 

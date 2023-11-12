@@ -114,11 +114,11 @@ bool mut_calculation(){
 }*/
 
 void kill_them_all(float* indi){
-    printf("beat beat beat kill kill kill stomp them raw \n");
+    printf("beat beat beat kill kill kill \n");
     for (i = 1; i <= TAM_POP; i++){
         indi[i] = (float) (rand() % maxx);
     }
-    printf("beat beat beat kill kill kill stomp them raw \n");
+    printf("beat beat beat kill kill kill\n");
 }
 
 void torneio(float* fit, float*indi, float* temp_indi){

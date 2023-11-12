@@ -1,3 +1,5 @@
+""" nesse codigo eu fiz com os arrays sendo passados por referencia e retornando um novo vetor com as mudanças
+"""
 from utils.vector import DynamicVector
 from memory.unsafe import Pointer
 from random import seed

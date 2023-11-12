@@ -14,7 +14,7 @@ def plot()-> PythonObject:
 
 fn main() raises:
    
-   plot()
+  # plot()
     
 
 

@@ -3,13 +3,13 @@ from memory.unsafe import Pointer
 from random import seed
 from random import random_float64 , random_si64
 from math import sqrt, pow , sin, cos
-
+#nesse codigo os arrays passados de arg para funções são mutaveis
 let TAM_POP: Int = 10
-let se_fuder_mojo: Int64 =10
 let DELTA: Float64 = 1.0
 let VAR_MUT_ARR_SIZE: Int = 7
 let OG_MUT: Float64 = 5.0
 let MAXX_VAL: Float64 = 1000
+let MAX_GEN: Int = 100
 
 var Total_gen: Int = 0
 var gen_stagnated: Int = 0
@@ -21,6 +21,12 @@ var max_fit_index: Int = 0
 var Current_mut: Float64 = OG_MUT
 var mut_changes_vector: DynamicVector[Float64] = DynamicVector[Float64](10)
 var mut_arr_index: Int = 0
+
+fn kill_them_all(inout pop_vector: DynamicVector[Float64]):
+    print("kill them all")
+    for i in range(TAM_POP):
+        pop_vector[i] = random_float64(min = 0, max= MAXX_VAL)
+    print("show no mercy")
 
 fn random_mutation()->Float64:
     return (random_float64(max= MAXX_VAL) - (MAXX_VAL/2)) * (Current_mut/100.0)
@@ -55,7 +61,7 @@ fn init_pop()-> DynamicVector[Float64]:
     var pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (TAM_POP):
         var x: Float64 =  random_float64(min = 0, max= MAXX_VAL)
-        print("random value selected : ",x)
+        print("random value selected :",x)
         pop.push_back(x)
     return pop
 
@@ -65,7 +71,7 @@ fn init_fit()->DynamicVector[Float64]:
         fit.push_back(0)
     return fit
 
-fn mut_calculation():
+fn mut_calculation()-> Bool:
     if (float_abs(max_fit- last_best_fit) < DELTA):
         gen_stagnated += 1
     else:
@@ -75,11 +81,14 @@ fn mut_calculation():
         print("mutation time")
         if(mut_arr_index == VAR_MUT_ARR_SIZE -1):
             Current_mut = OG_MUT
+            return True  #mata geral
         else:
             Current_mut = Current_mut * mut_changes_vector[mut_arr_index]
         mut_arr_index = (mut_arr_index+1) % VAR_MUT_ARR_SIZE
         gen_stagnated = 0
-        
+    
+    return False
+
 fn float_abs(value: Float64)-> Float64:
     return sqrt(pow(value, 2))
 
@@ -137,6 +146,8 @@ fn tournament(inout pop_vector: DynamicVector[Float64], fit_vector: DynamicVecto
         pop_vector[i] = (temp_pop[father1] + temp_pop[father2])/2.0 + random_mutation()
    
    print("max_fit:", max_fit)
+   if(mut_calculation()):
+      kill_them_all(pop_vector)
 
 fn ag(inout pop: DynamicVector[Float64], inout fit: DynamicVector[Float64]):
     natu_selection(pop, fit)

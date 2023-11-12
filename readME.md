@@ -14,3 +14,11 @@ copie o path parecido com esse: home/ubuntu/miniconda/base/lib/libpython3.11.so
 4) nesse ambiente (base) rode o comando:  export MOJO_PYTHON_LIBRARY=/home/kap/miniconda3/lib/libpython3.11.so
 
 5) agora o mojo vai ter acesso aos binários das libs de python e vai poder buildar essas libs e executá-las
+
+
+## coisas estranhas das linguagem
+no mojo tem um tipo de dado estranho chamado SIMD (sei la oq é) mas para vc tornar ele normal vc usa .value eu acho
+
+ex: let i: Int = random_si64(10,20).value
+
+

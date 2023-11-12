@@ -34,9 +34,9 @@ fn set_mut_changes_vector():
     mut_changes_vector.push_back(10)
     mut_changes_vector.push_back(1)
 
-fn natu_selection(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64])-> DynamicVector[Float64]:
+fn natu_selection(inout pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64]):
     var max_fit: Float64 = fit_vector[0]
-    var new_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
+    #var new_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range(1, TAM_POP):
         if fit_vector[i] > max_fit:
             max_fit = fit_vector[i]
@@ -44,19 +44,18 @@ fn natu_selection(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[
     for i in range (TAM_POP):
         if i == max_fit_index:
             continue  
-        new_pop.push_back(((pop_vector[i] + (pop_vector[max_fit_index]))/2) + random_mutation())
+        pop_vector.push_back(((pop_vector[i] + (pop_vector[max_fit_index]))/2) + random_mutation())
         # transa o melhor com todos
-        if new_pop[i] > MAXX_VAL: #caso supere o valor maximo, o indv recebe o valor max
-            new_pop[i] = MAXX_VAL
-        elif new_pop[i] < 0: #caso fique negativo, faz ele ficar positivo
-            new_pop[i] = new_pop[i] * -1.0
+        if pop_vector[i] > MAXX_VAL: #caso supere o valor maximo, o indv recebe o valor max
+            pop_vector[i] = MAXX_VAL
+        elif pop_vector[i] < 0: #caso fique negativo, faz ele ficar positivo
+            pop_vector[i] = pop_vector[i] * -1.0
     
-    return new_pop
-
 fn init_pop()-> DynamicVector[Float64]:
     var pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (TAM_POP):
         var x: Float64 =  random_float64(min = 0, max= MAXX_VAL)
+        print("random value selected : ",x)
         pop.push_back(x)
     return pop
 
@@ -87,18 +86,18 @@ fn float_abs(value: Float64)-> Float64:
 fn fit_func(x: Float64)-> Float64:
     return 5 * (2*cos(0.039*x) + 5*sin(0.05*x) + 0.5*cos(0.01*x) + 10*sin(0.07*x) + 5*sin(0.1*x) + 5*sin(0.035*x))*10+500
 
-fn evaluation(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64])-> DynamicVector[Float64]:
-    var new_fit: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
+fn evaluation(pop_vector: DynamicVector[Float64], inout fit_vector: DynamicVector[Float64]):
+    #var new_fit: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     var x: Float64
     var Func: Float64
-    print("%d\n", Total_gen)
+    #print("\n", Total_gen)
     for i in range(TAM_POP):
         x = pop_vector[i]
-        new_fit.push_back(fit_func(x))
-        if new_fit[i] > max_fit:
-            max_fit = new_fit[i]
+        fit_vector[i] = fit_func(x)
+        if  fit_vector[i] > max_fit:
+            max_fit =  fit_vector[i]
 
-fn tournament(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64])-> DynamicVector[Float64]:
+fn tournament(inout pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Float64]):
     var a:Int
     var b:Int
     var father1: Int
@@ -107,23 +106,45 @@ fn tournament(pop_vector: DynamicVector[Float64], fit_vector: DynamicVector[Floa
     var tempFit: Float64 = fit_vector[0]
     var temp_best_index: Int = 0
     var temp_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
-    var final_pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (1,TAM_POP):
         if(fit_vector[i] > max_fit):
             max_fit = fit_vector[i]
             max_fit_index = i
     
-    for i in range (TAM_POP):
+    for i in range (TAM_POP):  #copia o array pop para temp_pop
         temp_pop.push_back(pop_vector[i])
 
-    for i in range (TAM_POP):
+    for i in range (TAM_POP): #torneio de 2
         if i == max_fit_index:
             pass
         
-        a = random_si64(min = se_fuder_mojo,max = se_fuder_mojo)
+        a = (random_si64(0,TAM_POP).value + 1) #escolhe 2 individuos random para ser pai 1 
+        b = (random_si64(0,TAM_POP).value + 1)
+            
+        if fit_vector[a] > fit_vector[b]:
+            father1 = a
+        else:
+            father1 = b
         
+        a = (random_si64(0,TAM_POP).value + 1) #escolhe 2 individuos random para ser pai 1 
+        b = (random_si64(0,TAM_POP).value + 1)
+    
+        if fit_vector[a] > fit_vector[b]:
+            father2 = a
+        else:
+            father2 = b
 
-    pass
+        pop_vector[i] = (temp_pop[father1] + temp_pop[father2])/2.0 + random_mutation()
+   
+   print("max_fit:", max_fit)
+
+fn ag(inout pop: DynamicVector[Float64], inout fit: DynamicVector[Float64]):
+    natu_selection(pop, fit)
+    evaluation(pop, fit)
+    tournament(pop, fit)
+    last_best_fit = max_fit
+   
+    Total_gen += 1
 
 fn main():
   set_mut_changes_vector()
@@ -131,11 +152,8 @@ fn main():
   var pop: DynamicVector[Float64] = init_pop()
   var fit: DynamicVector[Float64] = init_fit()
 
-  for i in range (TAM_POP):
-      print(pop[i])
-  pop = natu_selection(pop_vector = pop, fit_vector = fit)
-  print("\n\n")
-  for i in range (TAM_POP):
-      print(pop[i])
+  for i in range(100):
+    ag(pop, fit)
+    print("last best fit:",  last_best_fit, "\n")
 
   

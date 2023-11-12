@@ -17,8 +17,11 @@ copie o path parecido com esse: home/ubuntu/miniconda/base/lib/libpython3.11.so
 
 
 ## coisas estranhas das linguagem
-no mojo tem um tipo de dado estranho chamado SIMD (sei la oq é) mas para vc tornar ele normal vc usa .value eu acho
-
+1) no mojo tem um tipo de dado estranho chamado SIMD (sei la oq é) mas para vc tornar ele normal vc usa .value eu acho
 ex: let i: Int = random_si64(10,20).value
+
+2) Para uma variavel ser mutável numa função vc deve usar a palavra inout antes do argumento da função
+ex:  fn teste(inout valor:Int):
+         pass
 
 

@@ -25,3 +25,10 @@ ex:  fn teste(inout valor:Int):
          pass
 
 
+## teste das linguagems (10000) gerações
+
+1) Python: média de 0.260ms
+
+2) Mojo: média de 0.063ms
+
+3) C++: média de 0.053ms

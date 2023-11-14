@@ -23,10 +23,10 @@ var mut_changes_vector: DynamicVector[Float64] = DynamicVector[Float64](10)
 var mut_arr_index: Int = 0
 
 fn kill_them_all(inout pop_vector: DynamicVector[Float64]):
-    print("kill them all")
+   # print("kill them all")
     for i in range(TAM_POP):
         pop_vector[i] = random_float64(min = 0, max= MAXX_VAL)
-    print("show no mercy")
+  #  print("show no mercy")
 
 fn random_mutation()->Float64:
     return (random_float64(max= MAXX_VAL) - (MAXX_VAL/2)) * (Current_mut/100.0)
@@ -61,7 +61,7 @@ fn init_pop()-> DynamicVector[Float64]:
     var pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (TAM_POP):
         var x: Float64 =  random_float64(min = 0, max= MAXX_VAL)
-        print("random value selected :",x)
+      #  print("random value selected :",x)
         pop.push_back(x)
     return pop
 
@@ -78,7 +78,7 @@ fn mut_calculation()-> Bool:
         gen_stagnated = 0
 
     if gen_stagnated > 5:
-        print("mutation time")
+      #  print("mutation time")
         if(mut_arr_index == VAR_MUT_ARR_SIZE -1):
             Current_mut = OG_MUT
             return True  #mata geral
@@ -163,8 +163,8 @@ fn main():
   var pop: DynamicVector[Float64] = init_pop()
   var fit: DynamicVector[Float64] = init_fit()
 
-  for i in range(100):
+  for i in range(10000):
     ag(pop, fit)
-    print("last best fit:",  last_best_fit, "\n")
+   # print("last best fit:",  last_best_fit, "\n")
 
   

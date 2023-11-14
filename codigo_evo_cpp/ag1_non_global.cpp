@@ -23,7 +23,7 @@ int gen = 0;
 
 void avalia(float* indi, float*fit){
  float x;
- printf(" generation %d \n", gen);
+ //printf(" generation %d \n", gen);
 
  for (i = 1; i <= TAM_POP; i++)
  {
@@ -90,7 +90,7 @@ bool mut_calculation(){
     }
 
     if (number_gen > 5){
-        printf("MUTATION TIME \n");
+      //  printf("MUTATION TIME \n");
         if(mut_arr_index == VAR_MUT_ARR_SIZE-1){
            MaxMut = OG_MUT;
            return true;
@@ -114,11 +114,11 @@ bool mut_calculation(){
 }*/
 
 void kill_them_all(float* indi){
-    printf("beat beat beat kill kill kill \n");
+   // printf("beat beat beat kill kill kill \n");
     for (i = 1; i <= TAM_POP; i++){
         indi[i] = (float) (rand() % maxx);
     }
-    printf("beat beat beat kill kill kill\n");
+   // printf("beat beat beat kill kill kill\n");
 }
 
 void torneio(float* fit, float*indi, float* temp_indi){
@@ -177,7 +177,7 @@ void ag(float* indi, float*fit, float* temp_indi){
  avalia(indi,fit);
  torneio(fit,indi,temp_indi);
  last_best_fit = max_fit;  //pega o ultimo melhor fitness antes da seleção, antes de aplicar sele nat e torneio
- printf(" last best fit %f \n", last_best_fit);
+// printf(" last best fit %f \n", last_best_fit);
  gen++;
 }
 
@@ -190,7 +190,7 @@ int main(){
   float* temp_indi = (float*) calloc(TAM_POP+1, sizeof(float));
        if(!fitness){exit(1);}
 
-   for (int i = 0; i < 100; i++) {  // Run the AG for 100 generations
+   for (int i = 0; i < 10000; i++) {  
      ag(individuals,fitness, temp_indi);
    }
     free(individuals);

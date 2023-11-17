@@ -88,7 +88,7 @@ def main():
        # pass
        # print(populacao[i])
 
-    print("melhor de todos:", melhordetodos)
+   # print("melhor de todos:", melhordetodos)
 
 
 # if __name__ == "__main__":

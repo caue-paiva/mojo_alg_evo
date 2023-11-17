@@ -1,95 +1,98 @@
 import random
-import time
+import math
 
-# Geração de números aleatórios a partir do horário do sistema (garante que seja diferente a cada vez que o código é rodado)
-gen = random.Random(time.time())
+TAM_POP = 10
+DELTA = 1
+VAR_MUT_ARR_SIZE = 7
+OG_MUT = 5.0
+maxx = 1000
+arr_mut_changes = [0.1, 0.1, 1000, 10, 10, 10, 1]
 
-melhordetodos = 0.0
+MaxMut = OG_MUT
+last_best_fit = 0.0
+max_fit = 0.0
+number_gen = 0
+mut_arr_index = 0
 
-def Randomize(a, b):
-    # Gera número de ponto flutuante e retorna
-    return gen.uniform(a, b)
+def avalia(indi):
+    fit = []
+    for x in indi:
+        y = 5 * (2 * math.cos(0.039 * x) + 5 * math.sin(0.05 * x) + 0.5 * math.cos(0.01 * x) + 10 * math.sin(0.07 * x) + 5 * math.sin(0.1 * x) + 5 * math.sin(0.035 * x)) * 10 + 500
+        fit.append(y)
+    return fit
 
-def Qualidade(a):
-    # Relação que indica a maior qualidade para aqueles valores mais próximos de 10
-    if a > 10:
-        a = (20 - a)
-    return a
+def init_pop():
+    return [random.uniform(0, maxx) for _ in range(TAM_POP)]
 
-def TorneioDeTres(a, b, c):
-    # Compara o fitness de 3 indivíduos, retornando aquele com o maior fitness
-    melhor = 0
+def sele_natu(indi, fit):
+    global max_fit, maxi
+    max_fit = max(fit)
+    maxi = fit.index(max_fit)
+    for i in range(TAM_POP):
+        if i == maxi:
+            continue
+        indi[i] = (indi[i] + indi[maxi]) / 2.0
+        indi[i] += (random.uniform(-maxx/2, maxx/2) * MaxMut / 100.0)
+        indi[i] = min(maxx, max(0, indi[i]))
+    return indi
 
-    if Qualidade(a) > melhor:
-        melhor = a
+def mut_calculation():
+    global MaxMut, number_gen, mut_arr_index
+    if abs(max_fit - last_best_fit) < DELTA:
+        number_gen += 1
+    else:
+        number_gen = 0
 
-    if Qualidade(b) > Qualidade(melhor):
-        melhor = b
+    if number_gen > 5:
+        if mut_arr_index == VAR_MUT_ARR_SIZE - 1:
+            MaxMut = OG_MUT
+            return True
+        else:
+            MaxMut *= arr_mut_changes[mut_arr_index]
+        mut_arr_index = (mut_arr_index + 1) % VAR_MUT_ARR_SIZE
+        number_gen = 0
 
-    if Qualidade(c) > Qualidade(melhor):
-        melhor = c
+    return False
 
-    return melhor
+def kill_them_all():
+    return [random.uniform(0, maxx) for _ in range(TAM_POP)]
 
-def main():
-    global melhordetodos
+def torneio(fit, indi):
+    global max_fit, maxi
+    temp_indi = indi.copy()
+    for i in range(TAM_POP):
+        if i == maxi:
+            continue
 
-    # Inicialização de uma população inicial com 15 indivíduos aleatórios
-    populacao = [Randomize(0.0, 20.0) for _ in range(15)]
+        a, b = random.randint(0, TAM_POP-1), random.randint(0, TAM_POP-1)
+        pai1 = a if fit[a] > fit[b] else b
 
-    # População inicial é mostrada
-    #print("populacao original")
-   # for i in range(15):
-        #print(populacao[i])
+        a, b = random.randint(0, TAM_POP-1), random.randint(0, TAM_POP-1)
+        pai2 = a if fit[a] > fit[b] else b
 
-    # Vetor que será usado para armazenar os 5 melhores de cada geração de indivíduos
-    melhores = [0.0] * 5
+        indi[i] = (temp_indi[pai1] + temp_indi[pai2]) / 2.0
+        indi[i] += (random.uniform(-maxx/2, maxx/2) / 100.0) * MaxMut
 
-    # Aqui é ajustado quantas vezes o processo se repetirá para aumentar ainda mais a qualidade da população
-    for k in range(10000):
+    if mut_calculation():
+        indi = kill_them_all()
+    return indi
 
-        # Definição de qual tem o melhor fitness naquela geração (mantém-se o antigo caso nenhum consiga superá-lo)
-        for i in range(15):
-            if Qualidade(populacao[i]) > Qualidade(melhordetodos):
-                melhordetodos = populacao[i]
+def ag(indi, fit):
+    global last_best_fit
+    indi = sele_natu(indi, fit)
+    fit = avalia(indi)
+    indi = torneio(fit, indi)
+    last_best_fit = max_fit
+    return indi, fit
 
-        for i in range(4):
-            a = int(Randomize(0.0, 12.1))
-            b = int(Randomize(0.0, 12.1))
-            c = int(Randomize(0.0, 12.1))
-            d = int(Randomize(0.0, 12.1))
-            e = int(Randomize(0.0, 12.1))
-            f = int(Randomize(0.0, 12.1))
+def roda():
+    random.seed()
+    individuals = init_pop()
+    fitness = avalia(individuals)
 
-            melhores[i] = (TorneioDeTres(populacao[a], populacao[b], populacao[c]) + TorneioDeTres(populacao[d], populacao[e], populacao[f])) / 2.0
-
-        # Último indivíduo dos melhores recebe o melhor de todos
-        melhores[4] = melhordetodos
-
-        # Mutações que acontecem para a evolução da população
-        for i in range(5):
-            populacao[3 * i] = melhores[i]
-            populacao[3 * i + 1] = melhores[i] + 0.00001
-            populacao[3 * i + 2] = melhores[i] - 0.00001
-
-            # Resetar melhores
-            melhores[i] = 0.0
-
-        # População intermediária é mostrada para efeito de comparação da evolução
-       # if k == 1000:
-          #  print("populacao intermediaria")
-           # for i in range(15):
-              #  pass
-               # print(populacao[i])
-
-    # População final e o melhor de todos são mostrados
-   # print("nova populacao")
-   # for i in range(15):
-       # pass
-       # print(populacao[i])
-
-    print("melhor de todos:", melhordetodos)
-
+    for _ in range(10000):
+        individuals, fitness = ag(individuals, fitness)
+        #print(max_fit)
 
 # if __name__ == "__main__":
 #     main()

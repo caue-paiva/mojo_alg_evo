@@ -65,7 +65,7 @@ fn init_pop()-> DynamicVector[Float64]:
     var pop: DynamicVector[Float64] = DynamicVector[Float64](TAM_POP)
     for i in range (TAM_POP):
         var x: Float64 =  random_float64(min = 0, max= MAXX_VAL)
-      #  print("random value selected :",x)
+        #print("random value selected :",x)
         pop.push_back(x)
     return pop
 
@@ -164,17 +164,15 @@ fn ag(inout pop: DynamicVector[Float64], inout fit: DynamicVector[Float64]):
     Total_gen += 1
 
 fn plot_all_fits_python(historical_fit: DynamicVector[Float64]) raises:
-    var python_fit_array = PythonObject([])
+    var python_fit_array = PythonObject([]) #cria um pythonObject que é uma lista
 
     for i in range(MAX_GEN):
-       python_fit_array.append(historical_fit[i])
+       python_fit_array.append(historical_fit[i]) #copia o dynamicVector nesse novo array de Python
 
-    Python.add_to_path("/home/kap/Desktop/MOJO_ALG_EVO")
+    Python.add_to_path("/home/kap/Desktop/MOJO_ALG_EVO") #precisa colocar isso para o mojo ver nosso arquivo Python
     let matplt = Python.import_module("plota_grafico")
-    matplt.plot_simple_graph(python_fit_array,MAX_GEN)
+    matplt.plot_simple_graph(python_fit_array,MAX_GEN) #chama a funcao de desenhar gráficos
  
-
-
 fn main() raises:
   set_mut_changes_vector()
   seed()

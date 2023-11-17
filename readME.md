@@ -24,11 +24,16 @@ ex: let i: Int = random_si64(10,20).value
 ex:  fn teste(inout valor:Int):
          pass
 
+3) para rodar codigo em python numa função fn (incluindo a fn main()), vc precisa colocar fn nome() raises: 
+não sei pq dnv
+
 
 ## teste das linguagems (10000) gerações
 
-1) Python: média de 0.260ms
+1) Python: média de 0.454ms
 
-2) Mojo: média de 0.063ms
+2) Mojo: média de 0.063ms (7.2 vezes mais rápido que python!!)
 
 3) C++: média de 0.053ms
+
+4) Mojo Compilando código em python: 0.368ms  (cerca de 81% do tempo que o python normal demora para rodar)

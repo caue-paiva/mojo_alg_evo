@@ -94,5 +94,6 @@ def roda():
         individuals, fitness = ag(individuals, fitness)
         #print(max_fit)
 
+#roda()
 # if __name__ == "__main__":
 #     main()

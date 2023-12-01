@@ -27,8 +27,11 @@ ex:  fn teste(inout valor:Int):
 3) para rodar codigo em python numa função fn (incluindo a fn main()), vc precisa colocar fn nome() raises: 
 não sei pq dnv
 
+4) PythonObjects e listas/tipos de dados em python
+   var python_fit_array = PythonObject([]) #cria um pythonObject que é uma lista
 
-## teste das linguagems (10000) gerações
+
+## teste das linguagems (10000) gerações, função maluca e sem print nenhum
 
 1) Python: média de 0.454ms
 

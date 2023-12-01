@@ -1,5 +1,4 @@
 from utils.vector import DynamicVector
-from memory.unsafe import Pointer
 from random import seed
 from random import random_float64 , random_si64
 from math import sqrt, pow , sin, cos
@@ -9,7 +8,7 @@ from python import Python
 #nesse codigo os arrays passados de arg para funções são mutaveis
 let TAM_POP: Int = 10
 let DELTA: Float64 = 1.0
-let VAR_MUT_ARR_SIZE: Int = 7
+let VAR_MUT_ARR_SIZE: Int = 7 #todas as constantes para o codigo
 let OG_MUT: Float64 = 5.0
 let MAXX_VAL: Float64 = 1000
 let MAX_GEN: Int = 100
@@ -157,14 +156,13 @@ fn tournament(inout pop_vector: DynamicVector[Float64], fit_vector: DynamicVecto
 fn ag(inout pop: DynamicVector[Float64], inout fit: DynamicVector[Float64]):
     natu_selection(pop, fit)
     evaluation(pop, fit)
-   # print("chama torneio")
     tournament(pop, fit)
     last_best_fit = max_fit
    
     Total_gen += 1
 
 fn plot_all_fits_python(historical_fit: DynamicVector[Float64]) raises:
-    var python_fit_array = PythonObject([]) #cria um pythonObject que é uma lista
+    let python_fit_array = PythonObject([]) #cria um pythonObject que é uma lista
 
     for i in range(MAX_GEN):
        python_fit_array.append(historical_fit[i]) #copia o dynamicVector nesse novo array de Python
@@ -174,15 +172,15 @@ fn plot_all_fits_python(historical_fit: DynamicVector[Float64]) raises:
     matplt.plot_simple_graph(python_fit_array,MAX_GEN) #chama a funcao de desenhar gráficos
  
 fn main() raises:
-  set_mut_changes_vector()
-  seed()
-  var pop: DynamicVector[Float64] = init_pop()
-  var fit: DynamicVector[Float64] = init_fit()
+    set_mut_changes_vector()
+    seed()
+    var pop: DynamicVector[Float64] = init_pop()
+    var fit: DynamicVector[Float64] = init_fit()
 
-  for i in range(MAX_GEN):
-    ag(pop, fit)
+    for i in range(MAX_GEN):
+        ag(pop, fit)
 
-  plot_all_fits_python(all_best_fits)
-   # print("last best fit:",  last_best_fit, "\n")
+    plot_all_fits_python(all_best_fits)
+    # print("last best fit:",  last_best_fit, "\n")
 
   
